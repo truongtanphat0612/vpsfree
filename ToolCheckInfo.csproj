@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ToolCheckInfo</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.18.1" />
+    <PackageReference Include="Selenium.Support" Version="4.18.1" />
+    <PackageReference Include="WebDriverManager" Version="2.17.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include all source files from new structure -->
+    <Compile Include="ToolCheckInfo.Core\**\*.cs" />
+    <Compile Include="ToolCheckInfo.Infrastructure\**\*.cs" />
+    <Compile Include="ToolCheckInfo.App\**\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exclude old folders if they still exist (just in case) -->
+    <Compile Remove="ToolCheckInfo\**" />
+    <Compile Remove="ToolCheckInfo.Model\**" />
+  </ItemGroup>
+
+</Project>

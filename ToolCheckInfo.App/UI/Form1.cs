@@ -14,7 +14,7 @@ using ToolCheckInfo.Infrastructure.Helpers;
 using ToolCheckInfo.Infrastructure.Network;
 using ToolCheckInfo.Infrastructure.Selenium;
 using ToolCheckInfo.Infrastructure.Services;
-using ToolCheckInfo.Core.Interfaces; // Thêm Interface
+using ToolCheckInfo.Core.Interfaces;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using OpenQA.Selenium.Chrome;
@@ -94,35 +94,20 @@ namespace ToolCheckInfo.App.UI
             Task.Run(() =>
             {
                 string driverPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chromedriver.exe");
-                bool needUpdate = false;
-                if (!File.Exists(driverPath)) needUpdate = true;
-                else
+                // Logic mới: Chỉ update nếu file chưa tồn tại
+                if (!File.Exists(driverPath))
                 {
                     try
                     {
-                        ChromeOptions opts = new ChromeOptions();
-                        opts.AddArgument("--headless=new");
-                        var service = ChromeDriverService.CreateDefaultService();
-                        service.HideCommandPromptWindow = true;
-                        using (var driver = new ChromeDriver(service, opts)) { driver.Quit(); }
-                    }
-                    catch { needUpdate = true; }
-                }
-                if (needUpdate)
-                {
-                    try
-                    {
-                        if (File.Exists(driverPath))
-                        {
-                            try { File.Copy(driverPath, driverPath + ".bak", true); } catch { }
-                            try { File.Delete(driverPath); } catch { }
-                        }
                         new DriverManager().SetUpDriver(new ChromeConfig());
                     }
                     catch { }
                 }
+                // Nếu file đã tồn tại, bỏ qua kiểm tra phiên bản (để tiết kiệm thời gian)
             });
         }
+
+        // ... (phần còn lại giữ nguyên)
 
         private void SetupGridEvents()
         {
@@ -160,8 +145,19 @@ namespace ToolCheckInfo.App.UI
             btnUpdateDriver.Text = "..."; btnUpdateDriver.Enabled = false;
             Task.Run(() =>
             {
-                DriverUpdater.ForceUpdateChromeDriver();
-                this.Invoke((MethodInvoker)delegate { btnUpdateDriver.Text = "Upd Driver"; btnUpdateDriver.Enabled = true; MessageBox.Show("Đã cập nhật Driver!", "Thông báo"); });
+                string driverPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chromedriver.exe");
+                // Update thủ công: Luôn xóa cũ tải mới
+                if (File.Exists(driverPath)) { try { File.Delete(driverPath); } catch { } }
+
+                try
+                {
+                    new DriverManager().SetUpDriver(new ChromeConfig());
+                    this.Invoke((MethodInvoker)delegate { btnUpdateDriver.Text = "Upd Driver"; btnUpdateDriver.Enabled = true; MessageBox.Show("Đã cập nhật Driver!", "Thông báo"); });
+                }
+                catch (Exception ex)
+                {
+                    this.Invoke((MethodInvoker)delegate { btnUpdateDriver.Text = "Upd Driver"; btnUpdateDriver.Enabled = true; MessageBox.Show("Lỗi update: " + ex.Message, "Lỗi"); });
+                }
             });
         }
 
@@ -293,7 +289,6 @@ namespace ToolCheckInfo.App.UI
                 UpdateStatus(account, "Bắt đầu đăng nhập...", null);
                 ILoginService loginService = new LoginService(chrome);
 
-                // Truyền callback để update UI
                 string loginStatus = await loginService.LoginAsync(account, (msg, color) => UpdateStatus(account, msg, color));
 
                 if (loginStatus == "OK")
@@ -334,7 +329,6 @@ namespace ToolCheckInfo.App.UI
             }
         }
 
-        // Wrapper để gọi GridFacebook update status an toàn
         private void UpdateStatus(Facebook account, string message, Color? color)
         {
             GridFacebook.Update_Status(account, GridFacebook.STATUS, message);
@@ -382,8 +376,6 @@ namespace ToolCheckInfo.App.UI
         private void DataGridViewFacebook_CellContentClick(object sender, DataGridViewCellEventArgs e) { if (e.ColumnIndex == 0 && e.RowIndex >= 0) dataGridViewFacebook.CommitEdit(DataGridViewDataErrorContexts.Commit); }
         private void DataGridViewFacebook_KeyDown(object sender, KeyEventArgs e) { /* ... */ }
         private void Form1_KeyDown(object sender, KeyEventArgs e) { /* ... */ }
-
-        #endregion
 
         #region UI Initialization (Generated Code Compacted)
         private void InitializeComponent()
@@ -445,14 +437,6 @@ namespace ToolCheckInfo.App.UI
             this.groupBox1.Text = "Configuration";
             this.groupBox1.Controls.Add(this.btnManageProxy); this.groupBox1.Controls.Add(this.chkProxy); this.groupBox1.Controls.Add(this.chkHideChrome); this.groupBox1.Controls.Add(this.numberThread); this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.chkScanAds); this.groupBox1.Controls.Add(this.chkScanPage); this.groupBox1.Controls.Add(this.chkScanGroup);
-            this.btnManageProxy.Location = new System.Drawing.Point(110, 65); this.btnManageProxy.Size = new System.Drawing.Size(80, 23); this.btnManageProxy.Text = "List Proxy"; this.btnManageProxy.Click += new System.EventHandler(this.btnManageProxy_Click);
-            this.chkProxy.Location = new System.Drawing.Point(10, 70); this.chkProxy.Text = "Use Proxy"; this.chkProxy.AutoSize = true; this.chkProxy.CheckedChanged += new System.EventHandler(this.chkProxy_CheckedChanged);
-            this.chkHideChrome.Location = new System.Drawing.Point(10, 45); this.chkHideChrome.Text = "Hide Chrome"; this.chkHideChrome.AutoSize = true; this.chkHideChrome.CheckedChanged += new System.EventHandler(this.chkHideChrome_CheckedChanged);
-            this.numberThread.Location = new System.Drawing.Point(70, 20); this.numberThread.Size = new System.Drawing.Size(50, 23); this.numberThread.ValueChanged += new System.EventHandler(this.numberThread_ValueChanged);
-            this.label1.Location = new System.Drawing.Point(10, 22); this.label1.Text = "Thread:";
-            this.chkScanAds.Location = new System.Drawing.Point(220, 20); this.chkScanAds.Text = "Check Ads"; this.chkScanAds.Checked = true; this.chkScanAds.AutoSize = true; this.chkScanAds.CheckedChanged += new System.EventHandler(this.chkScanAds_CheckedChanged);
-            this.chkScanPage.Location = new System.Drawing.Point(220, 45); this.chkScanPage.Text = "Check Page"; this.chkScanPage.AutoSize = true; this.chkScanPage.CheckedChanged += new System.EventHandler(this.chkScanPage_CheckedChanged);
-            this.chkScanGroup.Location = new System.Drawing.Point(220, 70); this.chkScanGroup.Text = "Check Group"; this.chkScanGroup.AutoSize = true; this.chkScanGroup.CheckedChanged += new System.EventHandler(this.chkScanGroup_CheckedChanged);
             this.groupBox3.Location = new System.Drawing.Point(610, 10);
             this.groupBox3.Size = new System.Drawing.Size(300, 100);
             this.groupBox3.Text = "Telegram Notification";
