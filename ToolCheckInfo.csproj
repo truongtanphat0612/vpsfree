@@ -18,14 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Include all source files from new structure -->
-    <Compile Include="ToolCheckInfo.Core\**\*.cs" />
-    <Compile Include="ToolCheckInfo.Infrastructure\**\*.cs" />
-    <Compile Include="ToolCheckInfo.App\**\*.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Exclude old folders if they still exist (just in case) -->
+    <!--
+      .NET SDK automatically includes all .cs files in the project directory and subdirectories.
+      Explicit <Compile Include="..." /> caused duplicates.
+      We only need to exclude the old folders if they still exist.
+    -->
     <Compile Remove="ToolCheckInfo\**" />
     <Compile Remove="ToolCheckInfo.Model\**" />
   </ItemGroup>
