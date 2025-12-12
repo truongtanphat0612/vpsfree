@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ToolCheckInfo;
+namespace ToolCheckInfo.App.UI;
 
 public class KeyForm : Form
 {

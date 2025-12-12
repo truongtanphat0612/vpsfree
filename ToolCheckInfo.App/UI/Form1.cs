@@ -19,6 +19,7 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using OpenQA.Selenium.Chrome;
 using Group = ToolCheckInfo.Core.Models.Group;
+using ToolCheckInfo.App.UI; // Import chính namespace của Form1 để nhìn thấy các form cùng namespace nếu cần
 
 namespace ToolCheckInfo.App.UI
 {
@@ -27,27 +28,44 @@ namespace ToolCheckInfo.App.UI
         private List<Facebook> _allAccounts = new List<Facebook>();
         private List<Facebook> _displayedAccounts = new List<Facebook>();
 
-        private SemaphoreSlim _semaphore;
+        private SemaphoreSlim _semaphore = null!;
         private bool _isStopScan = false;
         private bool _isRunning = false;
         private ManualResetEvent _pauseEvent = new ManualResetEvent(true);
         private static object _slotLock = new object();
-        private List<int> _freeSlots;
+        private List<int> _freeSlots = null!;
 
         private System.ComponentModel.IContainer components = null;
-        private Button btnReadFolder, btnScan, btnDelete, btnManageProxy, btnPause, btnUpdateDriver;
-        private DataGridView dataGridViewFacebook;
-        private TextBox txtPath, txtIdTele, txtBotTele, txtSearch;
-        private ComboBox cboFilter;
-        private GroupBox groupBox1, groupBox2, groupBox3;
-        private Label label1, label2, label3, lblCopyright, lblStats;
-        private NumericUpDown numberThread;
-        private CheckBox chkHideChrome, chkProxy;
-        private CheckBox chkScanAds, chkScanPage, chkScanGroup;
-        private PictureBox picLogo;
-        private ProgressBar prgImport;
-        private System.Windows.Forms.Timer timerStats;
-        private System.Windows.Forms.Timer timerAutoSave;
+        private Button btnReadFolder = null!;
+        private Button btnScan = null!;
+        private Button btnDelete = null!;
+        private Button btnManageProxy = null!;
+        private Button btnPause = null!;
+        private Button btnUpdateDriver = null!;
+        private DataGridView dataGridViewFacebook = null!;
+        private TextBox txtPath = null!;
+        private TextBox txtIdTele = null!;
+        private TextBox txtBotTele = null!;
+        private TextBox txtSearch = null!;
+        private ComboBox cboFilter = null!;
+        private GroupBox groupBox1 = null!;
+        private GroupBox groupBox2 = null!;
+        private GroupBox groupBox3 = null!;
+        private Label label1 = null!;
+        private Label label2 = null!;
+        private Label label3 = null!;
+        private Label lblCopyright = null!;
+        private Label lblStats = null!;
+        private NumericUpDown numberThread = null!;
+        private CheckBox chkHideChrome = null!;
+        private CheckBox chkProxy = null!;
+        private CheckBox chkScanAds = null!;
+        private CheckBox chkScanPage = null!;
+        private CheckBox chkScanGroup = null!;
+        private PictureBox picLogo = null!;
+        private ProgressBar prgImport = null!;
+        private System.Windows.Forms.Timer timerStats = null!;
+        private System.Windows.Forms.Timer timerAutoSave = null!;
         private bool isAllSelected = false;
         private bool isPaused = false;
         private GridContextMenuHelper menuHelper;
@@ -376,6 +394,7 @@ namespace ToolCheckInfo.App.UI
         private void DataGridViewFacebook_CellContentClick(object sender, DataGridViewCellEventArgs e) { if (e.ColumnIndex == 0 && e.RowIndex >= 0) dataGridViewFacebook.CommitEdit(DataGridViewDataErrorContexts.Commit); }
         private void DataGridViewFacebook_KeyDown(object sender, KeyEventArgs e) { /* ... */ }
         private void Form1_KeyDown(object sender, KeyEventArgs e) { /* ... */ }
+        #endregion
 
         #region UI Initialization (Generated Code Compacted)
         private void InitializeComponent()

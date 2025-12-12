@@ -8,7 +8,7 @@ using ToolCheckInfo.ConstanData;
 using ToolCheckInfo.Core.Models;
 using ToolCheckInfo.Infrastructure.Helpers;
 
-namespace ToolCheckInfo;
+namespace ToolCheckInfo.App.UI;
 
 public class FormProxy : Form
 {

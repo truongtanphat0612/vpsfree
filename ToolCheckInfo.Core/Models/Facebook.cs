@@ -12,5 +12,6 @@ namespace ToolCheckInfo.Core.Models
         public string Token { get; set; }
         public string Status { get; set; }
         public string Country { get; set; }
+        public string ImportDate { get; set; } // Added ImportDate property
     }
 }

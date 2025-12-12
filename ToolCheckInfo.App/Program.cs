@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
+using ToolCheckInfo.App.UI; // Đã thêm using
 
 namespace ToolCheckInfo;
 
